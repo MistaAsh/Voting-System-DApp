@@ -43,6 +43,7 @@ App = {
 	  });
 	},
   
+	// display the account we connecting to blockchain and list candidates
 	render: function() {
 	  var electionInstance;
 	  var loader = $("#loader");
@@ -60,7 +61,7 @@ App = {
   
 	  App.contracts.Election.deployed().then(function(instance) {
 		electionInstance = instance;
-		return electionInstance.candidatesCount();
+		return electionInstance.candidateCount();
 	  }).then(function(candidatesCount) {
 		var candidatesResults = $("#candidatesResults");
 		candidatesResults.empty();
