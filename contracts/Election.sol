@@ -18,6 +18,8 @@ contract Election
         addCandidate("Newmann");
     }
 
+    event votedEvent (uint indexed _candidateId);
+
     function addCandidate(string memory _name) private {
         candidateCount++;
         candidates[candidateCount] = Candidate(candidateCount, _name, 0);
@@ -28,5 +30,7 @@ contract Election
         require(_candidateId <= candidateCount && _candidateId > 0);    
         voters[msg.sender] = true;
         candidates[_candidateId].voteCount++;
+
+        emit votedEvent(_candidateId);
     }
 }
