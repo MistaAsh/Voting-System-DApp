@@ -25,21 +25,7 @@ App = {
 	  $.getJSON("Election.json", function(election) {
 		App.contracts.Election = TruffleContract(election);
 		App.contracts.Election.setProvider(App.web3Provider);
-  
-		App.listenForEvents();
 		return App.render();
-	  });
-	},
-  
-	listenForEvents: function() {
-	  App.contracts.Election.deployed().then(function(instance) {
-		instance.votedEvent({}, {
-		  fromBlock: 0,
-		  toBlock: 'latest'
-		}).watch(function(error, event) {
-		  console.log("event triggered", event)
-		  App.render();
-		});
 	  });
 	},
   
@@ -65,7 +51,7 @@ App = {
 	  }).then(function(candidatesCount) {
 		var candidatesResults = $("#candidatesResults");
 		candidatesResults.empty();
-  
+
 		var candidatesSelect = $('#candidatesSelect');
 		candidatesSelect.empty();
   
@@ -77,34 +63,34 @@ App = {
   
 			var candidateTemplate = "<tr><th>" + id + "</th><td>" + name + "</td><td>" + voteCount + "</td></tr>"
 			candidatesResults.append(candidateTemplate);
-  
-			var candidateOption = "<option value='" + id + "' >" + name + "</ option>"
+
+			var candidateOption = "<option value='" + id + "' >" + name + "</ option>"	
 			candidatesSelect.append(candidateOption);
 		  });
 		}
 		return electionInstance.voters(App.account);
 	  }).then(function(hasVoted) {
-		if(hasVoted) {
-		  $('form').hide();
-		}
-		loader.hide();
-		content.show();
+		  if (hasVoted) {
+			$('form').hide();
+		  }
+		  loader.hide();
+		  content.show();
 	  }).catch(function(error) {
 		console.warn(error);
 	  });
 	},
-  
+
 	castVote: function() {
-	  var candidateId = $('#candidatesSelect').val();
-	  App.contracts.Election.deployed().then(function(instance) {
-		return instance.vote(candidateId, { from: App.account });
-	  }).then(function(result) {
-		$("#content").hide();
-		$("#loader").show();
-	  }).catch(function(err) {
-		console.error(err);
-	  });
-	}
+		var candidateId = $('#candidatesSelect').val();
+		App.contracts.Election.deployed().then(function(instance) {
+			return instance.vote(candidateId, { from: App.account });
+		}).then(function(result) {
+			$("#content").hide();
+			$("#loader").show();
+		}).catch(function(err) {
+			console.error(err);
+		})
+	},
   };
   
   $(function() {
